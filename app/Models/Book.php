@@ -11,4 +11,8 @@ class Book extends Model
     protected $table = 'book';
     //protected $fillable = ['title', 'author', 'location', 'year', 'publisher'];
     protected $guarded = [];
+    public function stock()
+    {
+        return $this->hasMany(Stock::class);
+    }
 }
