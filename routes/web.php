@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::resource('/book', BookController::class);
+Route::post('/book/{id}/addstock', [BookController::class, 'addStock'])->name('book.addStock');

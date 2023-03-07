@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\Stock;
 
 class BookController extends Controller
 {
@@ -12,7 +13,6 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::all();
         return view('book.index', ['books' => $books]);
     }
 
@@ -50,9 +50,24 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Book $book)
     {
-        //
+        return view('book.show', ['book' => $book]);
+    }
+
+    public function addStock(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'no_code' => 'required|unique:stock,no_code',
+            'arrived' => 'required|date'
+        ]);
+        $book = Book::find($id);
+        $stock = new Stock;
+        $stock->book_id = $book->id;
+        $stock->no_code = $request->no_code;
+        $stock->arrived = $request->arrived;
+        $stock->save();
+        return redirect()->route('book.show', $book);
     }
 
     /**
