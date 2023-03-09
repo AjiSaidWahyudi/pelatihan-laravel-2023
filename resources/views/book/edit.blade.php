@@ -12,7 +12,7 @@
         <br>
         <h1>Input Book</h1>
         <hr>
-        <form action="{{route('book.update', $book)}}" method="post">
+        <form action="{{route('book.update', $book)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <input type="text" name="title" id="" class="form-control @error('title') is-invalid @enderror" placeholder="Book Title" value="{{$book->title}}">
@@ -39,6 +39,13 @@
             @error('publisher')
                 <div class="alert alert-danger">{{$message}}</div>
             @enderror
+            <br>
+            <input type="file" name="cover" id="" class="form-control @error('cover') is-invalid @enderror" placeholder="Cover">
+            @error('cover')
+                <div class="alert alert-danger">{{$message}}</div>
+            @enderror
+            <br>
+            <img src="{{asset('cover/'.$book->cover)}}" alt="Cover tidak ada" width="50px">
             <br>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>

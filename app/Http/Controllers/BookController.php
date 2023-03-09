@@ -13,6 +13,7 @@ class BookController extends Controller
      */
     public function index()
     {
+        $books = Book::orderBy('id', 'DESC')->get();
         return view('book.index', ['books' => $books]);
     }
 
@@ -34,14 +35,20 @@ class BookController extends Controller
             'author' => 'required|min:3',
             'location' => 'required',
             'year' => 'required|max:4',
-            'publisher' => 'required'
+            'publisher' => 'required',
+            'cover' => 'required|mimes:jpg'
         ]);
+        $file = $request->file('cover');
+        $namafile = $file->getClientOriginalName();
+        $tujuan_upload = 'cover';
+        $file->move($tujuan_upload, $namafile);
         $book = Book::create([
             'title' => $request->title,
             'author' => $request->author,
             'location' => $request->location,
             'year' => $request->year,
-            'publisher' => $request->publisher
+            'publisher' => $request->publisher,
+            'cover' => $namafile
         ]);
         // dd($book);
         return redirect()->route('book.index');
@@ -90,6 +97,19 @@ class BookController extends Controller
             'year' => 'required|max:4',
             'publisher' => 'required'
         ]);
+        if ($request->file('cover')) {
+            $validated = $request->validate([
+                'cover' => 'required|mimes:jpg'
+            ]);
+            $file = $request->file('cover');
+            $namafile = $file->getClientOriginalName();
+            $tujuan_upload = 'cover';
+            \File::delete('cover/'.$book->cover);
+            $file->move($tujuan_upload, $namafile);
+            $book->update([
+                'cover' => $namafile
+            ]);
+        }
         $book->update([
             'title' => $request->title,
             'author' => $request->author,
@@ -106,6 +126,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        \File::delete('cover/'.$book->cover);
         $book->delete();
         return redirect()->route('book.index');
     }

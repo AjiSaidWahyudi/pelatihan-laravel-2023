@@ -12,7 +12,7 @@
         <br>
         <h1>Input Book</h1>
         <hr>
-        <form action="{{route('book.store')}}" method="post">
+        <form action="{{route('book.store')}}" method="post" enctype="multipart/form-data">
             @csrf
             <input type="text" name="title" id="" class="form-control @error('title') is-invalid @enderror" placeholder="Book Title" autofocus>
             @error('title')
@@ -36,6 +36,11 @@
             <br>
             <input type="text" name="publisher" id="" class="form-control @error('publisher') is-invalid @enderror" placeholder="Book Publisher">
             @error('publisher')
+                <div class="alert alert-danger">{{$message}}</div>
+            @enderror
+            <br>
+            <input type="file" name="cover" id="" class="form-control @error('cover') is-invalid @enderror" placeholder="Cover">
+            @error('cover')
                 <div class="alert alert-danger">{{$message}}</div>
             @enderror
             <br>
